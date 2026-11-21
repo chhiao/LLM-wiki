@@ -1,0 +1,14 @@
+{
+  "topic": "Multi-Agent 系統是什麼？",
+  "audience": "沒做過 agent 系統的大學生",
+  "objectives": [
+    {"id": "O1", "goal": "說出 agent 是什麼（三元件 + run loop）", "keywords": ["agent", "元件", "loop", "結束條件"]},
+    {"id": "O2", "goal": "分辨 workflow 與 agent", "keywords": ["workflow", "預先", "動態"]},
+    {"id": "O3", "goal": "解釋什麼是多代理系統、為什麼要拆", "keywords": ["MAS", "多代理", "拆", "context"]},
+    {"id": "O4", "goal": "認得兩種主要架構：中央指揮型與交接型", "keywords": ["supervisor", "manager", "handoff", "orchestrator"]},
+    {"id": "O5", "goal": "用真實案例說明多代理的好處與代價", "keywords": ["90.2%", "15", "token", "平行"]},
+    {"id": "O6", "goal": "理解反方觀點與 context engineering", "keywords": ["Flappy", "共享", "context engineering", "假設"]},
+    {"id": "O7", "goal": "知道 MAS 常見失敗與為什麼要驗證", "keywords": ["MAST", "失敗", "驗證", "44%"]},
+    {"id": "O8", "goal": "能判斷一個任務該不該用多代理", "keywords": ["判斷", "適合", "不適合", "單一"]}
+  ]
+}

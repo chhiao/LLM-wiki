@@ -1,0 +1,282 @@
+[
+  {
+    "objective": "O1",
+    "goal": "說出 agent 是什麼（三元件 + run loop）",
+    "pages": [
+      "S6-openai-practical-guide",
+      "S2-anthropic-multi-agent-research",
+      "agent"
+    ],
+    "facts": [
+      {
+        "page": "S6-openai-practical-guide",
+        "line": "- agent 是高度獨立、代替使用者完成多步驟任務的系統；由 LLM 主導流程並使用工具，且在 guardrail 範圍內運作；單輪 LLM 呼叫或簡單聊天機器人不算 agent [S6]。"
+      },
+      {
+        "page": "S6-openai-practical-guide",
+        "line": "- 何時考慮 agent：需要細緻判斷或處理例外、規則多到難以維護、大量非結構化資料；不符合時，確定性的程式可能就夠了 [S6]。"
+      },
+      {
+        "page": "S6-openai-practical-guide",
+        "line": "- 三個核心元件：負責推理的 model、對外行動的 tools、設定行為與界線的 instructions [S6]。"
+      },
+      {
+        "page": "S6-openai-practical-guide",
+        "line": "- 單一 vs 多代理：先把單一 agent 的能力發揮到極致；當 prompt 有太多糾結的條件分支，或工具相似到改名稱與描述都無法避免選錯時，才拆成多個 agent；工具的相似度比數量重要 [S6]。"
+      },
+      {
+        "page": "S6-openai-practical-guide",
+        "line": "- run loop：agent 在迴圈中執行，直到結束條件，例如呼叫 final-output 工具、模型不再呼叫工具、發生錯誤、達到最大回合數 [S6]。"
+      },
+      {
+        "page": "S6-openai-practical-guide",
+        "line": "- Manager pattern：中央 manager 把專門 agent 當成工具呼叫，保有對話控制權並整合結果；例如一個 agent 協調多語翻譯 [S6]。"
+      }
+    ]
+  },
+  {
+    "objective": "O2",
+    "goal": "分辨 workflow 與 agent",
+    "pages": [
+      "S1-building-effective-agents",
+      "workflow-vs-agent",
+      "mas-architectures"
+    ],
+    "facts": [
+      {
+        "page": "S1-building-effective-agents",
+        "line": "- Anthropic 把 workflow 和 agent 合稱 agentic systems：workflow 用預先定義的程式路徑串起 LLM 與工具，agent 則由 LLM 動態決定自己的流程與工具使用 [S1]。"
+      },
+      {
+        "page": "S1-building-effective-agents",
+        "line": "- 五種 workflow 模式：prompt chaining、routing、parallelization（sectioning / voting）、orchestrator-workers、evaluator-optimizer [S1]。"
+      },
+      {
+        "page": "S1-building-effective-agents",
+        "line": "- orchestrator-workers：中央 LLM 動態拆解任務、分派給 worker、再整合結果；和 parallelization 不同，子任務不是事先定好的 [S1]。"
+      },
+      {
+        "page": "workflow-vs-agent",
+        "line": "| 誰決定下一步 | 工程師事先寫好的程式路徑 [S1] | LLM 動態決定 [S1] |"
+      },
+      {
+        "page": "workflow-vs-agent",
+        "line": "- 五種 workflow 模式 [S1]："
+      },
+      {
+        "page": "mas-architectures",
+        "line": "- 中央 LLM 動態拆解任務、分派給 worker、再整合結果；子任務不是事先定好的 [S1]。"
+      }
+    ]
+  },
+  {
+    "objective": "O3",
+    "goal": "解釋什麼是多代理系統、為什麼要拆",
+    "pages": [
+      "S3-cognition-dont-build-multi-agents",
+      "multi-agent-system",
+      "single-vs-multi-agent"
+    ],
+    "facts": [
+      {
+        "page": "S3-cognition-dont-build-multi-agents",
+        "line": "- 可靠的長時間 agent 靠的是 context engineering，也就是刻意管理每個部分能看到的資訊 [S3]。"
+      },
+      {
+        "page": "S3-cognition-dont-build-multi-agents",
+        "line": "- 原則一「共享 context」：subagent 不只需要原始任務，還需要前面的對話、工具呼叫與推理；應分享完整軌跡 [S3]。"
+      },
+      {
+        "page": "S3-cognition-dont-build-multi-agents",
+        "line": "- Flappy Bird 例子：把任務拆成「背景與水管」和「小鳥」兩個 subagent，一個做成瑪利歐風背景，一個做出不像 Flappy Bird 的鳥，最後的 agent 拿到兩塊拼不起來的成果 [S3]。"
+      },
+      {
+        "page": "S3-cognition-dont-build-multi-agents",
+        "line": "- 例子：Claude Code（2025 年 6 月時）的 subagent 只回答窄問題、不和主 agent 平行寫程式，好處是調查過程不會塞滿主 agent 的 context [S3]。"
+      },
+      {
+        "page": "multi-agent-system",
+        "line": "- MAS 是一群透過協調（orchestration）互動、合作完成任務的 agent [S4]。"
+      },
+      {
+        "page": "multi-agent-system",
+        "line": "單一 agent 遇到以下狀況時，可以考慮拆分 [S5]："
+      }
+    ]
+  },
+  {
+    "objective": "O4",
+    "goal": "認得兩種主要架構：中央指揮型與交接型",
+    "pages": [
+      "mas-architectures",
+      "S6-openai-practical-guide",
+      "S5-langgraph-multi-agent-docs"
+    ],
+    "facts": [
+      {
+        "page": "mas-architectures",
+        "line": "- LangGraph 稱為 supervisor：中央 LLM 決定下一個交給哪個 worker；tool-calling 版本把 worker 包成工具 [S5]。"
+      },
+      {
+        "page": "mas-architectures",
+        "line": "- OpenAI 稱為 manager pattern：manager 把專門 agent 當工具呼叫，保有對話控制權 [S6]。"
+      },
+      {
+        "page": "mas-architectures",
+        "line": "- LangGraph 中的 handoff 通常同時更新狀態並指定下一個 agent [S5]。"
+      },
+      {
+        "page": "mas-architectures",
+        "line": "- 小隊各有 supervisor，再由最上層 supervisor 管理；適合單一 supervisor 負擔太重時 [S5]。"
+      },
+      {
+        "page": "S6-openai-practical-guide",
+        "line": "- Manager pattern：中央 manager 把專門 agent 當成工具呼叫，保有對話控制權並整合結果；例如一個 agent 協調多語翻譯 [S6]。"
+      },
+      {
+        "page": "S6-openai-practical-guide",
+        "line": "- Decentralized pattern：同層 agent 互相 handoff 控制權並傳遞對話狀態；例如分流 agent 把物流問題交給訂單管理 agent [S6]。"
+      }
+    ]
+  },
+  {
+    "objective": "O5",
+    "goal": "用真實案例說明多代理的好處與代價",
+    "pages": [
+      "S2-anthropic-multi-agent-research",
+      "cost-and-tradeoffs",
+      "overview"
+    ],
+    "facts": [
+      {
+        "page": "S2-anthropic-multi-agent-research",
+        "line": "- 架構：lead agent 分析問題、規劃策略，平行派出多個 subagent 各自搜尋，再把濃縮結果交回給 lead 整合；最後由 CitationAgent 補上引用 [S2]。"
+      },
+      {
+        "page": "S2-anthropic-multi-agent-research",
+        "line": "- 成效：多代理系統（Claude Opus 4 當 lead、Claude Sonnet 4 當 subagent）在內部評測比單一 Opus 4 agent 高 90.2% [S2]。"
+      },
+      {
+        "page": "S2-anthropic-multi-agent-research",
+        "line": "- 在 BrowseComp 上，三個因素解釋 95% 的表現差異，其中 token 用量單獨解釋 80% [S2]。"
+      },
+      {
+        "page": "S2-anthropic-multi-agent-research",
+        "line": "- 代價：agent 約用聊天互動 4 倍的 token，多代理系統約 15 倍，所以只對高價值任務划算 [S2]。"
+      },
+      {
+        "page": "S2-anthropic-multi-agent-research",
+        "line": "- 經驗：委派時要給目標、輸出格式、工具指引與任務邊界；依問題難度調整 subagent 數量；平行化讓複雜查詢的研究時間最多減少 90% [S2]。"
+      },
+      {
+        "page": "cost-and-tradeoffs",
+        "line": "- agent 約用聊天互動 4 倍的 token；多代理系統約 15 倍 [S2]。"
+      }
+    ]
+  },
+  {
+    "objective": "O6",
+    "goal": "理解反方觀點與 context engineering",
+    "pages": [
+      "S3-cognition-dont-build-multi-agents",
+      "context-engineering",
+      "S5-langgraph-multi-agent-docs"
+    ],
+    "facts": [
+      {
+        "page": "S3-cognition-dont-build-multi-agents",
+        "line": "- 可靠的長時間 agent 靠的是 context engineering，也就是刻意管理每個部分能看到的資訊 [S3]。"
+      },
+      {
+        "page": "S3-cognition-dont-build-multi-agents",
+        "line": "- 原則一「共享 context」：subagent 不只需要原始任務，還需要前面的對話、工具呼叫與推理；應分享完整軌跡 [S3]。"
+      },
+      {
+        "page": "S3-cognition-dont-build-multi-agents",
+        "line": "- 原則二「行動隱含決策」：每個行動背後都有假設；平行 agent 若假設衝突，合起來的結果就會不一致 [S3]。"
+      },
+      {
+        "page": "S3-cognition-dont-build-multi-agents",
+        "line": "- Flappy Bird 例子：把任務拆成「背景與水管」和「小鳥」兩個 subagent，一個做成瑪利歐風背景，一個做出不像 Flappy Bird 的鳥，最後的 agent 拿到兩塊拼不起來的成果 [S3]。"
+      },
+      {
+        "page": "context-engineering",
+        "line": "## 經典例子：Flappy Bird [S3]"
+      },
+      {
+        "page": "context-engineering",
+        "line": "- 一個做成瑪利歐風背景，另一個做出不像 Flappy Bird 的鳥 → 最後拼不起來 [S3]。"
+      }
+    ]
+  },
+  {
+    "objective": "O7",
+    "goal": "知道 MAS 常見失敗與為什麼要驗證",
+    "pages": [
+      "S4-mast-why-mas-fail",
+      "failure-modes-mast",
+      "verification-and-evaluation"
+    ],
+    "facts": [
+      {
+        "page": "S4-mast-why-mas-fail",
+        "line": "- 失敗率約 41% 到 86.7% [S4]。"
+      },
+      {
+        "page": "S4-mast-why-mas-fail",
+        "line": "- MAST 三大類：系統設計問題（約 44%）、agent 間不對齊（約 32%）、任務驗證（約 24%）[S4]。"
+      },
+      {
+        "page": "S4-mast-why-mas-fail",
+        "line": "- 介入實驗：ChatDev 改善角色規格，成功率提升約 9.4%；加入高層目標驗證最多 +15.6% [S4]。"
+      },
+      {
+        "page": "S4-mast-why-mas-fail",
+        "line": "- 結論：許多失敗反映的是系統設計，同一個模型配上更好的設計就能改善；驗證常只做「能不能編譯」這類表面檢查，應做多層、檢查高層目標的驗證 [S4]。"
+      },
+      {
+        "page": "failure-modes-mast",
+        "line": "MAST（Multi-Agent System Failure Taxonomy）分析 7 個框架、找出 14 種失敗模式、分成 3 大類 [S4]。失敗率約 41% 到 86.7% [S4]。"
+      },
+      {
+        "page": "failure-modes-mast",
+        "line": "## FC1 系統設計問題（約 44%）[S4]"
+      }
+    ]
+  },
+  {
+    "objective": "O8",
+    "goal": "能判斷一個任務該不該用多代理",
+    "pages": [
+      "when-to-use-mas",
+      "S2-anthropic-multi-agent-research",
+      "single-vs-multi-agent"
+    ],
+    "facts": [
+      {
+        "page": "when-to-use-mas",
+        "line": "2. **需要 agent 嗎？** 有細緻判斷、難維護的規則、大量非結構化資料才需要 [S6]。"
+      },
+      {
+        "page": "when-to-use-mas",
+        "line": "3. **單一 agent 用到極致了嗎？** 先最大化單一 agent [S6]。"
+      },
+      {
+        "page": "when-to-use-mas",
+        "line": "## 適合 MAS 的任務 [S2]"
+      },
+      {
+        "page": "S2-anthropic-multi-agent-research",
+        "line": "- 成效：多代理系統（Claude Opus 4 當 lead、Claude Sonnet 4 當 subagent）在內部評測比單一 Opus 4 agent 高 90.2% [S2]。"
+      },
+      {
+        "page": "S2-anthropic-multi-agent-research",
+        "line": "- 不適合：需要所有 agent 共享同一份 context、或 agent 間依賴很多的任務；多數寫程式任務屬於這類 [S2]。"
+      },
+      {
+        "page": "S2-anthropic-multi-agent-research",
+        "line": "- 評估：看最終結果是否正確而非步驟是否照劇本；一開始約 20 個真實問題就足夠；用單一 LLM-as-judge 依 rubric 評分；人工測試仍不可少 [S2]。"
+      }
+    ]
+  }
+]

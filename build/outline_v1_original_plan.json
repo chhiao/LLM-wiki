@@ -1,0 +1,341 @@
+{
+ "title": "Multi-Agent 系統是什麼？——什麼時候該讓 AI 組隊",
+ "slides": [
+  {
+   "id": "s01",
+   "kind": "title",
+   "title": "Multi-Agent 系統是什麼？",
+   "objectives": [],
+   "wiki_refs": [
+    "overview"
+   ],
+   "defines": [],
+   "terms_used": [
+    "Multi-Agent System"
+   ],
+   "key_facts": []
+  },
+  {
+   "id": "s02",
+   "kind": "agenda",
+   "title": "今天要學會的 4 件事",
+   "objectives": [],
+   "wiki_refs": [
+    "overview"
+   ],
+   "defines": [],
+   "terms_used": [
+    "Agent",
+    "Handoff",
+    "Multi-Agent System",
+    "Workflow"
+   ],
+   "key_facts": []
+  },
+  {
+   "id": "s03",
+   "kind": "concept",
+   "title": "先從一個 Agent 說起",
+   "objectives": [
+    "O1"
+   ],
+   "wiki_refs": [
+    "agent"
+   ],
+   "defines": [
+    "Agent",
+    "Tool"
+   ],
+   "terms_used": [
+    "Agent",
+    "Tool"
+   ],
+   "key_facts": []
+  },
+  {
+   "id": "s04",
+   "kind": "concept",
+   "title": "Agent 怎麼動起來：run loop",
+   "objectives": [
+    "O1"
+   ],
+   "wiki_refs": [
+    "agent"
+   ],
+   "defines": [
+    "Run loop"
+   ],
+   "terms_used": [
+    "Agent",
+    "Run loop",
+    "Tool",
+    "MAS"
+   ],
+   "key_facts": [
+    "沒設好結束條件是常見的失敗原因（研究中占 12.4%）"
+   ]
+  },
+  {
+   "id": "s05",
+   "kind": "compare",
+   "title": "Workflow vs Agent",
+   "objectives": [
+    "O2"
+   ],
+   "wiki_refs": [
+    "workflow-vs-agent"
+   ],
+   "defines": [
+    "Workflow"
+   ],
+   "terms_used": [
+    "Agent",
+    "Tool",
+    "Workflow"
+   ],
+   "key_facts": []
+  },
+  {
+   "id": "s06",
+   "kind": "concept",
+   "title": "為什麼要多個 Agent？",
+   "objectives": [
+    "O3"
+   ],
+   "wiki_refs": [
+    "multi-agent-system"
+   ],
+   "defines": [
+    "Multi-Agent System",
+    "Context window"
+   ],
+   "terms_used": [
+    "Agent",
+    "Context window",
+    "Multi-Agent System",
+    "Tool"
+   ],
+   "key_facts": []
+  },
+  {
+   "id": "s07",
+   "kind": "concept",
+   "title": "架構一：中央指揮型",
+   "objectives": [
+    "O4"
+   ],
+   "wiki_refs": [
+    "mas-architectures"
+   ],
+   "defines": [
+    "Orchestrator-worker",
+    "Subagent"
+   ],
+   "terms_used": [
+    "Orchestrator-worker",
+    "Subagent"
+   ],
+   "key_facts": []
+  },
+  {
+   "id": "s08",
+   "kind": "concept",
+   "title": "架構二：交接型",
+   "objectives": [
+    "O4"
+   ],
+   "wiki_refs": [
+    "mas-architectures"
+   ],
+   "defines": [
+    "Handoff"
+   ],
+   "terms_used": [
+    "Handoff"
+   ],
+   "key_facts": []
+  },
+  {
+   "id": "s09",
+   "kind": "case",
+   "title": "案例：Anthropic 的研究系統",
+   "objectives": [
+    "O5"
+   ],
+   "wiki_refs": [
+    "S2-anthropic-multi-agent-research",
+    "cost-and-tradeoffs"
+   ],
+   "defines": [
+    "Token"
+   ],
+   "terms_used": [
+    "Subagent",
+    "Token"
+   ],
+   "key_facts": [
+    "內部評測比單一 agent 高 90.2%",
+    "但 token（計費單位）用量約是一般聊天的 15 倍",
+    "表現差異有 80% 可由 token 用量解釋 → 本質是「花更多算力」"
+   ]
+  },
+  {
+   "id": "s10",
+   "kind": "case",
+   "title": "反方：「不要做多代理」",
+   "objectives": [
+    "O6"
+   ],
+   "wiki_refs": [
+    "S3-cognition-dont-build-multi-agents",
+    "context-engineering"
+   ],
+   "defines": [],
+   "terms_used": [
+    "Agent",
+    "Multi-Agent System",
+    "Subagent"
+   ],
+   "key_facts": [
+    "Cognition（2025-06-12）：多代理在正式環境很脆弱"
+   ]
+  },
+  {
+   "id": "s11",
+   "kind": "concept",
+   "title": "關鍵能力：Context Engineering",
+   "objectives": [
+    "O6"
+   ],
+   "wiki_refs": [
+    "context-engineering"
+   ],
+   "defines": [
+    "Context engineering"
+   ],
+   "terms_used": [
+    "Context engineering"
+   ],
+   "key_facts": []
+  },
+  {
+   "id": "s12",
+   "kind": "concept",
+   "title": "MAS 為什麼會失敗？",
+   "objectives": [
+    "O7"
+   ],
+   "wiki_refs": [
+    "failure-modes-mast"
+   ],
+   "defines": [
+    "MAST"
+   ],
+   "terms_used": [
+    "Agent",
+    "MAST",
+    "Multi-Agent System"
+   ],
+   "key_facts": [
+    "UC Berkeley 等分析 7 個框架，整理出 MAST：14 種失敗、3 大類",
+    "七個系統的失敗率約 41% 到 86.7%",
+    "最大類是「系統設計問題」約 44%——設計可以修，不全是模型的錯",
+    "最常見：步驟重複 15.7%、推理與行動不一致 13.2%"
+   ]
+  },
+  {
+   "id": "s13",
+   "kind": "concept",
+   "title": "所以要驗證",
+   "objectives": [
+    "O7"
+   ],
+   "wiki_refs": [
+    "verification-and-evaluation"
+   ],
+   "defines": [
+    "LLM-as-judge",
+    "Guardrail"
+   ],
+   "terms_used": [
+    "LLM-as-judge"
+   ],
+   "key_facts": [
+    "加入高層目標驗證，ChatDev 成功率最多 +15.6%",
+    "LLM-as-judge：讓 LLM 依評分表打分，約 20 題就能起步"
+   ]
+  },
+  {
+   "id": "s14",
+   "kind": "decision",
+   "title": "我該用多代理嗎？",
+   "objectives": [
+    "O8"
+   ],
+   "wiki_refs": [
+    "when-to-use-mas"
+   ],
+   "defines": [],
+   "terms_used": [
+    "Agent",
+    "Context window",
+    "Multi-Agent System",
+    "Workflow"
+   ],
+   "key_facts": []
+  },
+  {
+   "id": "s15",
+   "kind": "quiz",
+   "title": "小測驗",
+   "objectives": [
+    "O2",
+    "O4",
+    "O8"
+   ],
+   "wiki_refs": [
+    "when-to-use-mas",
+    "mas-architectures",
+    "workflow-vs-agent"
+   ],
+   "defines": [],
+   "terms_used": [
+    "Agent",
+    "Handoff",
+    "Multi-Agent System",
+    "Orchestrator-worker",
+    "Workflow"
+   ],
+   "key_facts": [
+    "同時調查 50 家公司的董事會成員"
+   ]
+  },
+  {
+   "id": "s16",
+   "kind": "summary",
+   "title": "重點回顧",
+   "objectives": [
+    "O1",
+    "O3",
+    "O5",
+    "O6",
+    "O7"
+   ],
+   "wiki_refs": [
+    "overview",
+    "single-vs-multi-agent"
+   ],
+   "defines": [],
+   "terms_used": [
+    "Agent",
+    "Multi-Agent System",
+    "Token",
+    "Tool"
+   ],
+   "key_facts": [
+    "MAS 能平行、能突破 context 限制，但 token 約 15 倍",
+    "失敗常來自設計（約 44%），所以要多層驗證"
+   ]
+  }
+ ]
+}

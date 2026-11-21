@@ -1,0 +1,534 @@
+{
+ "title": "Multi-Agent 系統是什麼？——什麼時候該讓 AI 組隊",
+ "slides": [
+  {
+   "id": "s01",
+   "kind": "title",
+   "title": "Multi-Agent 系統是什麼？",
+   "subtitle": "什麼時候該讓 AI 組隊？一份從零開始的入門",
+   "defines": [],
+   "bullets": []
+  },
+  {
+   "id": "s02",
+   "kind": "agenda",
+   "title": "今天要學會的 4 件事",
+   "defines": [],
+   "bullets": [
+    {
+     "text": "① Agent 是什麼、和 Workflow 差在哪"
+    },
+    {
+     "text": "② 多代理系統（MAS）長什麼樣子：中央指揮 vs Handoff 交接"
+    },
+    {
+     "text": "③ 正反兩方的真實經驗：好處、代價、失敗"
+    },
+    {
+     "text": "④ 一套判斷流程：你的任務該不該組隊"
+    }
+   ]
+  },
+  {
+   "id": "s03",
+   "kind": "concept",
+   "title": "先從一個 Agent 說起",
+   "defines": [
+    "Agent",
+    "Tool"
+   ],
+   "bullets": [
+    {
+     "text": "Agent：由 LLM 主導流程、使用工具，獨立完成多步驟任務的系統",
+     "src": [
+      "S6"
+     ]
+    },
+    {
+     "text": "三個元件：Model（推理）、Tools（對外行動）、Instructions（行為界線）",
+     "src": [
+      "S6"
+     ]
+    },
+    {
+     "text": "單輪問答、簡單聊天機器人不算 agent",
+     "src": [
+      "S6"
+     ]
+    }
+   ],
+   "visual": "<div class='trio'><div><b>🧠 Model</b><span>大腦：推理與決定</span></div><div><b>🛠️ Tools</b><span>手腳：查資料、呼叫 API</span></div><div><b>📘 Instructions</b><span>工作手冊：該做與不該做</span></div></div>"
+  },
+  {
+   "id": "s04",
+   "kind": "concept",
+   "title": "Agent 怎麼動起來：run loop",
+   "defines": [
+    "Run loop"
+   ],
+   "bullets": [
+    {
+     "text": "Agent 在迴圈裡重複：思考 → 用工具 → 看結果 → 再思考",
+     "src": [
+      "S6"
+     ]
+    },
+    {
+     "text": "每一步都用環境回傳的真實結果（工具結果、程式執行結果）判斷進度",
+     "src": [
+      "S1"
+     ]
+    },
+    {
+     "text": "一定要有結束條件：完成輸出、不再呼叫工具、出錯、或達最大回合數",
+     "src": [
+      "S6"
+     ]
+    },
+    {
+     "text": "沒設好結束條件是常見的失敗原因（研究中占 12.4%）",
+     "src": [
+      "S4"
+     ]
+    }
+   ],
+   "visual": "<div class='loop'><span>思考</span>→<span>用工具</span>→<span>看結果</span>→<span>還沒完成？回到思考</span>→<span class='end'>結束條件 ✔</span></div>"
+  },
+  {
+   "id": "s05",
+   "kind": "compare",
+   "title": "Workflow vs Agent",
+   "defines": [
+    "Workflow"
+   ],
+   "bullets": [
+    {
+     "text": "Workflow：工程師事先寫好路徑，LLM 照著走",
+     "src": [
+      "S1"
+     ]
+    },
+    {
+     "text": "Agent：LLM 自己決定下一步要做什麼、用哪個工具",
+     "src": [
+      "S1"
+     ]
+    },
+    {
+     "text": "定義清楚、重視可預測性 → Workflow；步驟數無法預測 → Agent",
+     "src": [
+      "S1"
+     ]
+    },
+    {
+     "text": "原則：先用最簡單的方案，有明確效果才加複雜度",
+     "src": [
+      "S1"
+     ]
+    }
+   ],
+   "visual": "<table><tr><th></th><th>Workflow</th><th>Agent</th></tr><tr><td>誰決定下一步</td><td>工程師寫好的程式</td><td>LLM 動態決定</td></tr><tr><td>適合</td><td>流程固定的任務</td><td>開放、步驟難預測的問題</td></tr><tr><td>代價</td><td>彈性低</td><td>成本高、錯誤會累積</td></tr></table>"
+  },
+  {
+   "id": "s06",
+   "kind": "concept",
+   "title": "為什麼要多個 Agent？",
+   "defines": [
+    "Multi-Agent System",
+    "Context window"
+   ],
+   "bullets": [
+    {
+     "text": "多代理系統（MAS）：一群透過協調互動、合作完成任務的 agent",
+     "src": [
+      "S4"
+     ]
+    },
+    {
+     "text": "單一 agent 工具太多而常選錯 → 拆",
+     "src": [
+      "S5"
+     ]
+    },
+    {
+     "text": "context window（模型一次能讀的量）塞不下 → 拆",
+     "src": [
+      "S5"
+     ]
+    },
+    {
+     "text": "需要不同專長，例如規劃、搜尋、寫作 → 拆",
+     "src": [
+      "S5"
+     ]
+    },
+    {
+     "text": "類比：專案小組——組長分工、組員各做一塊、最後整合",
+     "inference": true
+    }
+   ]
+  },
+  {
+   "id": "s07",
+   "kind": "concept",
+   "title": "架構一：中央指揮型",
+   "defines": [
+    "Orchestrator-worker",
+    "Subagent"
+   ],
+   "bullets": [
+    {
+     "text": "一個中央 agent（Orchestrator／Supervisor／Manager）拆任務、分派、整合",
+     "src": [
+      "S1",
+      "S5",
+      "S6"
+     ]
+    },
+    {
+     "text": "被派出去做子任務的叫 subagent（或 worker）",
+     "src": [
+      "S2"
+     ]
+    },
+    {
+     "text": "子任務不是事先寫死，而是中央 agent 動態決定",
+     "src": [
+      "S1"
+     ]
+    },
+    {
+     "text": "三家公司叫法不同，其實是同一種形狀",
+     "src": [
+      "S1",
+      "S5",
+      "S6"
+     ]
+    }
+   ],
+   "visual": "<div class='tree'><div class='boss'>🧑‍✈️ Orchestrator</div><div class='kids'><div>🔍 subagent A</div><div>🔍 subagent B</div><div>🔍 subagent C</div></div><div class='note'>結果全部交回中央整合</div></div>"
+  },
+  {
+   "id": "s08",
+   "kind": "concept",
+   "title": "架構二：交接型（Handoff）",
+   "defines": [
+    "Handoff"
+   ],
+   "bullets": [
+    {
+     "text": "Handoff：一個 agent 把控制權直接交給另一個 agent",
+     "src": [
+      "S5",
+      "S6"
+     ]
+    },
+    {
+     "text": "接手的 agent 直接面對使用者，並帶著對話狀態",
+     "src": [
+      "S6"
+     ]
+    },
+    {
+     "text": "例：客服分流 agent 把物流問題交給訂單管理 agent",
+     "src": [
+      "S6"
+     ]
+    },
+    {
+     "text": "延伸：Network（誰都能叫誰）、Hierarchical（小隊長＋總隊長）",
+     "src": [
+      "S5"
+     ]
+    }
+   ],
+   "visual": "<div class='loop'><span>🙋 使用者</span>→<span>分流 agent</span>⇢<span>訂單 agent</span>⇢<span>退款 agent</span></div>"
+  },
+  {
+   "id": "s09",
+   "kind": "case",
+   "title": "案例：Anthropic 的研究系統",
+   "defines": [
+    "Token"
+   ],
+   "bullets": [
+    {
+     "text": "Lead agent 規劃後平行派出多個 subagent 搜尋，再整合成報告",
+     "src": [
+      "S2"
+     ]
+    },
+    {
+     "text": "內部評測比單一 agent 高 90.2%",
+     "src": [
+      "S2"
+     ]
+    },
+    {
+     "text": "但 token（計費單位）用量約是一般聊天的 15 倍",
+     "src": [
+      "S2"
+     ]
+    },
+    {
+     "text": "表現差異有 80% 可由 token 用量解釋 → 本質是「花更多算力」",
+     "src": [
+      "S2"
+     ]
+    },
+    {
+     "text": "所以只適合高價值、可平行的任務",
+     "src": [
+      "S2"
+     ]
+    }
+   ],
+   "visual": "<div class='stats'><div><b>+90.2%</b><span>內部評測表現</span></div><div><b>15×</b><span>token 用量</span></div><div><b>−90%</b><span>複雜查詢研究時間（最多）</span></div></div>"
+  },
+  {
+   "id": "s10",
+   "kind": "case",
+   "title": "反方：「不要做多代理」",
+   "defines": [],
+   "bullets": [
+    {
+     "text": "Cognition（2025-06-12）：多代理在正式環境很脆弱",
+     "src": [
+      "S3"
+     ]
+    },
+    {
+     "text": "Flappy Bird 例子：背景和小鳥分給兩個 subagent 做",
+     "src": [
+      "S3"
+     ]
+    },
+    {
+     "text": "結果一個做成瑪利歐風背景、一個做出不像的鳥 → 拼不起來",
+     "src": [
+      "S3"
+     ]
+    },
+    {
+     "text": "原因：每個行動都藏著假設，平行 agent 的假設會互相衝突",
+     "src": [
+      "S3"
+     ]
+    }
+   ],
+   "visual": "<div class='stats'><div><b>🌄 subagent 1</b><span>做了瑪利歐風背景</span></div><div><b>🐤 subagent 2</b><span>做了不像 Flappy Bird 的鳥</span></div><div><b>💥 合併</b><span>風格完全不搭</span></div></div>"
+  },
+  {
+   "id": "s11",
+   "kind": "concept",
+   "title": "關鍵能力：Context Engineering",
+   "defines": [
+    "Context engineering"
+   ],
+   "bullets": [
+    {
+     "text": "定義：刻意管理系統每個部分「看得到哪些資訊」",
+     "src": [
+      "S3"
+     ]
+    },
+    {
+     "text": "原則一：共享 context——給完整脈絡，不只給任務一句話",
+     "src": [
+      "S3"
+     ]
+    },
+    {
+     "text": "共享全部推理較好但很快就爆；只傳結果較省但會丟脈絡",
+     "src": [
+      "S5"
+     ]
+    },
+    {
+     "text": "S2 和 S3 其實有共識：context 怎麼分配決定成敗",
+     "inference": true
+    }
+   ],
+   "visual": "<table><tr><th>做法</th><th>好處</th><th>壞處</th></tr><tr><td>共享完整 scratchpad</td><td>推理較好</td><td>成長很快</td></tr><tr><td>只傳最終結果</td><td>精簡、agent 多也撐得住</td><td>可能丟失決策脈絡</td></tr><tr><td>壓縮模型摘要歷史</td><td>能跑更久</td><td>難做，只是延後上限</td></tr></table>"
+  },
+  {
+   "id": "s12",
+   "kind": "concept",
+   "title": "MAS 為什麼會失敗？",
+   "defines": [
+    "MAST"
+   ],
+   "bullets": [
+    {
+     "text": "UC Berkeley 等分析 7 個框架，整理出 MAST：14 種失敗、3 大類",
+     "src": [
+      "S4"
+     ]
+    },
+    {
+     "text": "七個系統的失敗率約 41% 到 86.7%",
+     "src": [
+      "S4"
+     ]
+    },
+    {
+     "text": "最大類是「系統設計問題」約 44%——設計可以修，不全是模型的錯",
+     "src": [
+      "S4"
+     ]
+    },
+    {
+     "text": "最常見：步驟重複 15.7%、推理與行動不一致 13.2%",
+     "src": [
+      "S4"
+     ]
+    }
+   ],
+   "visual": "<div class='bars'><div style='--w:44%'><span>系統設計問題</span><b>≈44%</b></div><div style='--w:32%'><span>Agent 間不對齊</span><b>≈32%</b></div><div style='--w:24%'><span>任務驗證</span><b>≈24%</b></div></div>"
+  },
+  {
+   "id": "s13",
+   "kind": "concept",
+   "title": "所以要驗證",
+   "defines": [
+    "LLM-as-judge",
+    "Guardrail"
+   ],
+   "bullets": [
+    {
+     "text": "驗證常只做表面檢查（例如程式能不能編譯），要改成檢查高層目標",
+     "src": [
+      "S4"
+     ]
+    },
+    {
+     "text": "加入高層目標驗證，ChatDev 成功率最多 +15.6%",
+     "src": [
+      "S4"
+     ]
+    },
+    {
+     "text": "LLM-as-judge：讓 LLM 依評分表打分，約 20 題就能起步",
+     "src": [
+      "S2"
+     ]
+    },
+    {
+     "text": "Guardrail 要多層；高風險、不可逆動作前交給人類",
+     "src": [
+      "S6"
+     ]
+    }
+   ],
+   "visual": "<div class='layers'><div class='top'><b>第 3 層</b> 高層目標：任務真的完成了嗎？</div><div><b>第 2 層</b> 內容：事實、引用正確嗎？（LLM-as-judge）</div><div><b>第 1 層</b> 表面：能執行、格式對嗎？</div><div><b>＋ 人</b> 高風險、不可逆動作前由人確認</div></div>"
+  },
+  {
+   "id": "s14",
+   "kind": "decision",
+   "title": "我該用多代理嗎？",
+   "defines": [],
+   "bullets": [
+    {
+     "text": "先問：一次 LLM 呼叫加檢索夠不夠？",
+     "src": [
+      "S1"
+     ]
+    },
+    {
+     "text": "再問：單一 agent 用到極致了嗎？",
+     "src": [
+      "S6"
+     ]
+    },
+    {
+     "text": "適合組隊：高價值、可平行、資訊量超過一個 context window",
+     "src": [
+      "S2"
+     ]
+    },
+    {
+     "text": "不適合：需要共享 context、彼此依賴多（例如多數寫程式任務）",
+     "src": [
+      "S2"
+     ]
+    }
+   ],
+   "visual": "<div class='steps'><div>1. 一次呼叫夠嗎？<i>夠 → 停</i></div><div>2. 需要 agent 嗎？<i>不需要 → Workflow</i></div><div>3. 單一 agent 極致了嗎？<i>還沒 → 先優化</i></div><div>4. 可平行＋高價值＋context 放不下？<i>是 → 組隊 ✅</i></div></div>"
+  },
+  {
+   "id": "s15",
+   "kind": "quiz",
+   "title": "小測驗",
+   "defines": [],
+   "bullets": [],
+   "quiz": [
+    {
+     "q": "流程固定、每次步驟都一樣的請假審核，最適合？",
+     "options": [
+      "Workflow",
+      "Agent",
+      "多代理系統"
+     ],
+     "answer": 0,
+     "why": "定義清楚、重視可預測性 → Workflow（S1）"
+    },
+    {
+     "q": "客服分流 agent 把物流問題「交給」訂單 agent 接手，這是？",
+     "options": [
+      "Orchestrator-worker",
+      "Handoff",
+      "Voting"
+     ],
+     "answer": 1,
+     "why": "控制權直接交給另一個 agent → Handoff（S6）"
+    },
+    {
+     "q": "哪個任務最適合多代理？",
+     "options": [
+      "修一個函式的 bug",
+      "同時調查很多家公司的董事會成員",
+      "把一句話翻成英文"
+     ],
+     "answer": 1,
+     "why": "高價值、可平行、資訊量大 → 適合組隊（S2）"
+    }
+   ]
+  },
+  {
+   "id": "s16",
+   "kind": "summary",
+   "title": "重點回顧",
+   "defines": [],
+   "bullets": [
+    {
+     "text": "Agent = Model + Tools + Instructions，在 loop 裡跑到結束條件",
+     "src": [
+      "S6"
+     ]
+    },
+    {
+     "text": "MAS 能平行、能突破 context 限制，但 token 約 15 倍",
+     "src": [
+      "S2"
+     ]
+    },
+    {
+     "text": "反方提醒：平行 agent 的隱含假設會衝突",
+     "src": [
+      "S3"
+     ]
+    },
+    {
+     "text": "失敗常來自設計（約 44%），所以要多層驗證",
+     "src": [
+      "S4"
+     ]
+    },
+    {
+     "text": "口訣：先單一、後多個；能平行、夠值錢、放不下，才組隊",
+     "inference": true
+    }
+   ]
+  }
+ ]
+}
