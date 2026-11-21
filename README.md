@@ -1,20 +1,16 @@
 # LLM Wiki：Multi-Agent 系統
 
-以 Karpathy 的 LLM Wiki pattern 建立的主題知識庫，主題是 **Multi-Agent 系統（多代理系統，MAS）**；再用一條有檢查關卡的 pipeline，把 Wiki 自動轉成給初學者的教學簡報。
+以 Karpathy 的 LLM Wiki pattern 建立的主題知識庫，主題是 **MAS (Multi-Agent System)是什麼？**；再用一條有檢查關卡的 pipeline，把 Wiki 自動轉成給初學者的教學簡報。
 
 ## 線上瀏覽
 
 | 成品 | 連結 |
 |---|---|
 | 📚 Wiki 瀏覽頁 | https://chhiao.github.io/LLM-wiki/dist/wiki.html |
-| 🎞️ 教學簡報（16 頁） | https://chhiao.github.io/LLM-wiki/dist/slides.html |
-
-- 簡報用 ← → 或空白鍵翻頁；每頁下方的「📖」按鈕會打開對應的 Wiki 頁面，可以直接查證內容出處。
-- 兩個檔案都是單一自含的 HTML，不需網路也能直接開啟。
+| 🎞️ 教學簡報 | https://chhiao.github.io/LLM-wiki/dist/slides.html |
 
 ## 專案概念
 
-- **讀者**：資管系大學生，懂一點 LLM，但沒做過 agent 系統。
 - **三層結構**：`raw/`（來源卡，只增不改）→ `wiki/`（LLM 整理的知識頁）→ `CLAUDE.md`（規則層 schema）。
 - **可追溯**：每個事實句都標來源 ID（如 `[S2]`），沒有來源的句子標 `[推論]`；數字必須與來源完全一致。
 - **先討論、後生成**：每篇來源 ingest 時，先列出 key takeaways 並與使用者討論要強調什麼，紀錄在來源頁的「先討論紀錄」，再寫入 Wiki。
@@ -72,13 +68,6 @@ L0 lint → N1 query → N2 outline → G1 大綱關卡 → N3 draft → G2 內�
 | G3 呈現關卡 | HTML 結構、每頁都有 Wiki 對照、鍵盤導覽；v2 加上 headless 瀏覽器版面檢查 |
 
 關卡失敗時會回到對應節點重新生成。N2、N3 由 LLM 撰寫 JSON，其餘節點都是程式。設計理由參考 S4（MAST）的建議：驗證要多層，而且要檢查高層目標，不能只看表面。
-
-### 迭代紀錄
-
-完整紀錄見 [`runs/run_log.md`](runs/run_log.md)，重點如下：
-
-- **v1**：G2 抓到 3 個問題（數字在 Wiki 找不到、測驗題自編數字、術語先用後定義），修正後通過。
-- **v2**：截圖發現版面問題，在 G3 加入瀏覽器版面檢查（第一次跑抓到 22 項），修正 CSS 後通過；並把術語順序與數字追溯提前到 G1。用原始大綱做回歸測試，v2 的 G1 抓到 3/3 個問題，v1 抓到 0/3。
 
 ## 在本機執行
 
